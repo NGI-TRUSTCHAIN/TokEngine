@@ -39,7 +39,7 @@
 				}
 			},
 			"timeout":"300000",
-			"receiverAddress":"0x5fbe74a283f7954f10aa04c2edf55578811aeb03 ",
+			"receiverAddress":"0x5fbe74a283f7954f10aa04c2edf55578811aeb03",
 			"operatorAddress":"0xa752b195b4e7b1af82ca472756edfdb13bc9c79d"
 		}
 	],

@@ -188,10 +188,12 @@ public class Engine {
 					if (adapter==null) throw new Error("Adapter not found for chainID: "+chainID);
 
 					ACell receiver=tnet.get(Fields.RECEIVER_ADDRESS);
-					if (receiver==null) receiver=adapter.getReceiverAddress();
+					if (receiver==null) try {
+						receiver=adapter.getReceiverAddress();
+					} catch (Exception e) { /* still null */ };
 					if (receiver==null) {
 						tnet=tnet.assoc(Fields.RECEIVER_ADDRESS, adapter.getOperatorAddress());
-						log.warn("No receiver address for token '"+tokenAlias+"' on network '"+netAlias+"'. Defaulting to operator address");
+						log.warn("No receiverAddress for token '"+tokenAlias+"' on network '"+netAlias+"'. Defaulting to operator address");
 					}	
 					
 					// check assetID is valid
