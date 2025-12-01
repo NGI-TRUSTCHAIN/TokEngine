@@ -219,8 +219,7 @@ public class Client extends ARESTClient {
 	}
 
 	/**
-	 * Makes a HTTP request as a CompletableFuture
-	 * @param request Request object
+	 * Makes a HTTP payout request as a CompletableFuture
 	 * @return Future with a string containing the payout transaction hash
 	 */
 	public CompletableFuture<AInteger> payout(String fromUser, String fromNetwork, String fromToken, String toUser, String toNetwork, String toToken,String quantity) {

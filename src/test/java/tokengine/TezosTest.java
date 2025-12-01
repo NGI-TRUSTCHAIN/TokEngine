@@ -529,6 +529,7 @@ public class TezosTest {
 		// Note: Current placeholder implementation always returns true for non-zero signatures
 		String differentMessage = "Different message";
 		Blob differentMessageBlob = Blob.wrap(differentMessage.getBytes());
+		@SuppressWarnings("unused")
 		boolean isInvalid = TezosUtils.validateEd25519Signature(tezosAddress, publicKey, differentMessageBlob, signatureBlob);
 		// TODO: In real implementation, this should be false
 		// assertFalse(isInvalid, "Signature should be invalid for a different message");

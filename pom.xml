@@ -18,7 +18,7 @@
 		<slf4j.version>2.0.17</slf4j.version>
 		<javalin.version>6.7.0</javalin.version>
 		<javalin.plugin.version>6.7.0-1</javalin.plugin.version>
-		<convex.version>0.8.2-SNAPSHOT</convex.version>
+		<convex.version>0.8.3-SNAPSHOT</convex.version>
 		<web3j.version>5.0.0</web3j.version>
 	</properties>
 

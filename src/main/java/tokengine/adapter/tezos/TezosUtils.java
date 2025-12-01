@@ -111,8 +111,8 @@ public class TezosUtils {
 	}
 
 	/**
-     * Gets the raw address bytes from a Tezos tz1
-     * @param address
+     * Gets the raw address bytes from a Tezos address
+     * @param s Tezos address e.g. starting with "tz1"
      * @return array of bytes
      */
 	public static byte[] getAddressBytes(String s) {
