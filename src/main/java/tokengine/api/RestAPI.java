@@ -331,19 +331,31 @@ public class RestAPI extends ATokengineAPI {
 		
 		ACell network=src.get(Fields.NETWORK);
 		if (network==null) throw new BadRequestResponse("Expected 'network' property for source");
-		AString chainID=RT.str(network);
-		AAdapter<?> adapter=engine.getAdapter(chainID);
-		if (adapter==null) throw new BadRequestResponse("Can't find network: "+chainID);
+		AString srcChainID=RT.str(network);
+		AAdapter<?> adapter=engine.getAdapter(srcChainID);
+		if (adapter==null) throw new BadRequestResponse("Can't find source network: "+srcChainID);
 		
-		String token=RT.str(src.get(Fields.TOKEN)).toString();
 		
 		AMap<AString,ACell> dest = RT.ensureMap(req.get(Fields.DESTINATION));
 		if (dest==null) throw new BadRequestResponse("Expected 'destination' object specifying payout account");
 		AString destUserKey=RT.ensureString(dest.get(Fields.ACCOUNT));
 		if (destUserKey==null) throw new BadRequestResponse("Expected 'dest.account' string identifying user");
+		
+		ACell destNetwork=dest.get(Fields.NETWORK);
+		if (destNetwork==null) throw new BadRequestResponse("Expected 'network' property for destination");
+		AString destChainID=RT.str(destNetwork);
+		AAdapter<?> destAdapter=engine.getAdapter(destChainID);
+		if (destAdapter==null) throw new BadRequestResponse("Can't find destination network: "+destChainID);
 
-		engine.subtractVirtualCredit(engine.getTokenKey(adapter, token), srcUserKey, q);
-		AString result = engine.makePayout(destUserKey.toString(), token, adapter, q,dep);
+		// Subtract virtual credit
+		String token=RT.str(src.get(Fields.TOKEN)).toString();
+		AString tokenKey=engine.getTokenKey(adapter, token);
+		AString canonicalAddress=adapter.parseUserKey(srcUserKey.toString());
+		engine.subtractVirtualCredit(tokenKey, canonicalAddress, q);
+		
+		// Payout on destination network
+		String destToken=RT.str(dest.get(Fields.TOKEN)).toString();
+		AString result = engine.makePayout(destUserKey.toString(), destToken, destAdapter, q,dep);
 		// log.warn("Payout made: "+r);
 		return result;
 	}

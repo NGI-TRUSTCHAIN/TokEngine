@@ -1,0 +1,72 @@
+// This is an example coufig file as used in WALKTHROUGH.md
+{
+	"networks" : [
+		{
+			"description": "Convex test network",
+			"alias":"convex",                 // Short alias for network (Operator defined)
+		 	"chainID":"convex:local",         // CAIP19 Chain ID
+			"url":"https://peer.convex.live", // RPC / API endpoint
+			"receiverAddress":"#11",
+			"operatorAddress":"#11",
+			"timeout": "10000" /* Millisecond timeout period */
+		},
+		{
+			"description": "Ethereum Sepolia test network",
+			"alias":"sepolia",
+		 	"chainID":"eip155:11155111",
+			"url":"https://sepolia.drpc.org",
+			"fees": {
+				"payout": {
+					"minimum":"10",
+					"fixed":"0.02 ETH",
+					"variable": "0.01%",
+					"gas":"150%"
+				}
+			},
+			"timeout":"300000",
+			"operatorAddress":"0x06eEB4bb0BC58671d097824611F76fe50C5dB075",
+			"receiverAddress":"0x5fbe74a283f7954f10aa04c2edf55578811aeb03"
+		}
+	],
+	
+	/* Used to provide general metadata for cross-chain tokens */
+	"tokens" : [
+		{
+			"alias": "USDC", /* must match transfers category exactly */
+			"symbol" : "USDC",
+			"name" : "USDC"
+		}
+	],
+	
+		/* Stste equivalent tokens on multilpe networks which can be transferred 1:1 */ 
+	"transfers" : {
+		"USDC": {
+			"convex" : {
+				"symbol":"USDC",
+				"assetID":"cad29:test",
+				"payout":true
+			},
+			"sepolia": {
+				"symbol":"USDC",
+				"assetID":"erc20:0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+				"treasuryID":"0x06eEB4bb0BC58671d097824611F76fe50C5dB075",
+				"receive":true
+			}
+		}
+	},
+	
+	"operations": {		
+		"log-dir": "~/.tokengine/logs",
+
+		/* Etch store, defaults to ~/.tokengine/etch.db , can use "temp" for temp file */
+		"etch-file": "temp",
+
+		"key-dir": "~/.tokengine/keys",
+
+		/* REST API port */
+		"api-port": 8080,
+		
+		/** Enable test mode. Disable for production / real asset use */
+		"test":true
+	}	
+}

@@ -35,8 +35,8 @@ import convex.core.util.FileUtils;
 import convex.core.util.JSON;
 import convex.core.util.Utils;
 import convex.etch.EtchStore;
-import convex.lattice.ACursor;
-import convex.lattice.Cursors;
+import convex.lattice.cursor.ACursor;
+import convex.lattice.cursor.Cursors;
 import convex.peer.API;
 import convex.peer.ConfigException;
 import convex.peer.LaunchException;
@@ -91,7 +91,7 @@ public class Engine {
 	ACursor<ACell> latticeCursor;
 	
 	/**
-	 * Tokens
+	 * Tokens map of alias -> 
 	 */
 	AMap<AString,AMap<AString,ACell>> tokens=Maps.empty();
 	

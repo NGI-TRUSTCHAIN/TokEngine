@@ -403,7 +403,7 @@ public class EVMAdapter extends AAdapter<AString> {
 		if (!receipt.isStatusOK()) {
             return null;
         }
-		System.out.println(receipt);
+		// System.out.println(receipt);
 		
 		AInteger received=CVMLong.ZERO;
 		for (org.web3j.protocol.core.methods.response.Log log : receipt.getLogs()) {
