@@ -2,7 +2,7 @@
 
 This is a guided example of a cross-chain token exchange using Tokengine. It uses:
 - EVM: Ethereum Sepolia test network
-- CVM: A Local Convex test network as launched by TokEngine
+- CVM: A Local Convex test network (as launched by TokEngine)
 
 And token exchange occurs with the `USDC` coin ()
 
@@ -12,7 +12,7 @@ And token exchange occurs with the `USDC` coin ()
 2. A copy of `tokengine.jar`
 3. A copy of `convex.jar` (needed for key import etc.)
 
-`tokenegine.jar` and `convex.jar` can be built from source with `mvn clean install` or downloaded from a trusted source, e.g. the Convex snapshots drive at `https://drive.google.com/drive/folders/1AZdyuZOmC70i_TtuEW3uEKvjYLOqIMiv`
+`tokengine.jar` and `convex.jar` can be built from source with `mvn clean install` or downloaded from a trusted source, e.g. the Convex snapshots drive at `https://drive.google.com/drive/folders/1AZdyuZOmC70i_TtuEW3uEKvjYLOqIMiv`
 
 ## Config
 
@@ -22,9 +22,9 @@ This is a JSON5 config file that sets up TokEngine for operation as described in
 
 ## Convex Key
 
-You will need to import a convex key into your keystore. The test network uses a default Ed25519 with public key `0x5c8ebd5ca7190a9a683e54db8d5b6cf51660e0a649f13de894dc37a38591740c`
+You will need to import a convex key into your keystore for the operator account to use for payouts. The test network uses a default Ed25519 with public key `0x5c8ebd5ca7190a9a683e54db8d5b6cf51660e0a649f13de894dc37a38591740c`
 
-You can 
+You can use the Convex CLI to do this:
 
 ```
 java -jar convex.jar key import --type=seed --text 0x00370031325baa88fef0ff932aaa2fa89b120c2ec309557d76d8433401ee5203
@@ -159,7 +159,7 @@ To payout USDC oin Convex, make a `POST` request to `api/v1/payout` like:
 }
 ```
 
-## Check payout balance
+## Check destination balance
 
 After the payout, there should be a balance on the destination network. Check this with the `api/v1/balance` endpoint with a POST of:
 
