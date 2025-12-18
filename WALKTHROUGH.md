@@ -44,7 +44,7 @@ TokEngine should now have started. You should see a number of log entries includ
 2025-12-17T17:44:30.689Z INFO  [main] tokengine.adapter.AAdapter -- Added asset USDC on network convex:local with Asset ID cad29:132
 ```
 
-This indicates that the USDC asset CAD29 token has been successfully created, and has been assigned account `#132`. **Take a note of this number if different**
+This indicates that the `USDC` asset CAD29 token has been successfully created, and has been assigned account `#132`. **Take a note of this number if different**
 
 ## Check API
 
@@ -72,6 +72,8 @@ If successful, you should see an `HTTP 200` result with the CAD29 balance, somet
 }
 ```
 
+The value is the balance of the genesis user `#11` which deployed the test CAD29 token with an initial balance of $1m (since USDC uses 6 decimals)
+
 > [!NOTE]
 > If you use a different `operatorAddress` or `receiverAddress` in the config 
 > you will need to change `#11` and if you have a different CAD29 USDC token you will need to change 
@@ -79,7 +81,7 @@ If successful, you should see an `HTTP 200` result with the CAD29 balance, somet
 
 ## Deposit USDC on Sepolia
 
-To make a deposit of USDC from the EVM, you can use the following transaction with a post to `/api/v1/deposit` as follows:
+To make a deposit of `USDC` from the EVM, you can use the following transaction with a post to `/api/v1/deposit` as follows:
 
 ```json
 {
@@ -102,7 +104,7 @@ This transaction already exists on Sepolia (we have provided it for testing purp
 }
 ```
 
-i.e. 6510 units of USDC deposited.
+i.e. 6510 units of USDC deposited, which is correct for the given test transaction.
 
 > [!NOTE]
 > If you make multiple deposits from the same transaction, subsequent attempts will fail
@@ -156,5 +158,22 @@ To payout USDC oin Convex, make a `POST` request to `api/v1/payout` like:
   "quantity": "100"
 }
 ```
+
+## Check payout balance
+
+After the payout, there should be a balance on the destination network. Check this with the `api/v1/balance` endpoint with a POST of:
+
+```json
+{
+  "source": {
+    "account": "#12",
+    "network": "convex",
+    "token": "USDC"
+  }
+}
+```
+
+You can likewise verify that the operatorAdress (`#11`) has a remaining balance of `999999999900` after `100` units was paid out.
+
 
 
