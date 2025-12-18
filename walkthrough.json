@@ -5,7 +5,6 @@
 			"description": "Convex test network",
 			"alias":"convex",                 // Short alias for network (Operator defined)
 		 	"chainID":"convex:local",         // CAIP19 Chain ID
-			"url":"https://peer.convex.live", // RPC / API endpoint
 			"receiverAddress":"#11",
 			"operatorAddress":"#11",
 			"timeout": "10000" /* Millisecond timeout period */
