@@ -91,7 +91,7 @@ public class Engine {
 	ACursor<ACell> latticeCursor;
 	
 	/**
-	 * Tokens map of alias -> 
+	 * Tokens map of alias -> Token config
 	 */
 	AMap<AString,AMap<AString,ACell>> tokens=Maps.empty();
 	
@@ -146,7 +146,7 @@ public class Engine {
 		}
 		
 		int tn=configTransfers.size();
-		if (n!=tn) log.warn("Number of 'tranfers' does not equal the number of 'tokens'. This is probably a mistake?");
+		if (n!=tn) log.warn("Number of 'transfers' does not equal the number of 'tokens'. This is probably a mistake?");
 		// Loop over  classes
 		for (int i=0; i<n; i++) {
 			MapEntry<AString, ?> transfer=configTransfers.get(i);
@@ -543,7 +543,8 @@ public class Engine {
 	@SuppressWarnings("rawtypes")
 	public AString makePayout(String target, String asset, AAdapter adapter, AInteger quantity, AMap<AString,ACell> depositProof)  {
 		try {
-			AInteger operatorBalance = adapter.getOperatorBalance(asset);
+			AString tokenKey=getTokenKey(adapter,asset);
+			AInteger operatorBalance = adapter.getOperatorBalance(tokenKey);
 
 			if (RT.lt(new ACell[] {operatorBalance,quantity}).booleanValue()) {
 				log.warn("Attempted payout but insufficent operator balance available!");
@@ -564,7 +565,7 @@ public class Engine {
 			
 			return r;
 		} catch (Exception e) {
-			throw new IllegalStateException("Unable to process payout",e);
+			throw new IllegalStateException("Unable to process payout of "+asset,e);
 		} 
 	}
 	
@@ -645,12 +646,12 @@ public class Engine {
  	}
 	
 	@SuppressWarnings("unchecked")
-	public synchronized AInteger subtractVirtualCredit(AString tokenKey, AString userKey, AInteger amount) {
+	public synchronized AInteger subtractVirtualCredit(AString tokenKey, AString userKey, AInteger amount) throws PaymentException {
 		if (amount.isNegative()) throw new IllegalArgumentException("Cannot subtract negative credit: "+amount);
 		AInteger current=getVirtualCredit(tokenKey, userKey);
 		if (current==null) current=CVMLong.ZERO;
 		AInteger newBalance=current.sub(amount);
-		if (newBalance.isNegative()) throw new IllegalArgumentException("Cannot remove more than total credit balance: current="+current+" removed="+amount+ " for user="+userKey);
+		if (newBalance.isNegative()) throw new PaymentException("Cannot remove more than total credit balance: current="+current+" removed="+amount+ " for user="+userKey);
 		this.stateCursor.update(state->(AMap<AString, ACell>) RT.assocIn(state, newBalance, Fields.CREDITS,userKey,tokenKey));
 		
 		AMap<AString,?> msg=getBaseLogMessage("DEBIT");

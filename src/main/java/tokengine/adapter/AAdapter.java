@@ -26,7 +26,8 @@ public abstract class AAdapter<AddressType extends ACell> {
 	/** The config map for this adapter */
 	protected final AMap<AString,ACell> config;
 	
-	/** The tokens map for this adapter 
+	/** 
+	 * The tokens map for this adapter 
 	 * CAIP Asset ID -> Token record
 	 * 
 	 * Where:
@@ -34,6 +35,15 @@ public abstract class AAdapter<AddressType extends ACell> {
 	 * - Value = Token Record provided from config and transformed by addTokenMapping
 	 */
 	protected Index<AString,AMap<AString,ACell>> tokens=Index.none();
+	
+	/** 
+	 * The aliases this adapter: Alias -> CAIP Asset ID 
+	 * 
+	 * Where:
+	 * - Key = Alias e.g. "USDC"
+	 * - Value = CAIP Asset ID e.g. "cad29:132"
+	 */
+	protected Index<AString,AString> tokenAliases=Index.none();
 
 	/** The alias for this adapter */
 	protected final AString alias;
@@ -91,9 +101,10 @@ public abstract class AAdapter<AddressType extends ACell> {
 
 	/**
 	 * Gets the balance of the current operator as an Integer
+	 * @param tokenKey CAIP-19 ID of asset e.g. "cad29:132"
 	 * @return Balance of the operator
 	 */
-	public abstract AInteger getOperatorBalance(String asset) throws IOException;
+	public abstract AInteger getOperatorBalance(AString tokenKey) throws IOException;
 
 	
 	/**
@@ -108,7 +119,7 @@ public abstract class AAdapter<AddressType extends ACell> {
 	 * Parses an object into an AddressType for this adapter.
 	 * Accepts AddressType, AString, or String. Normalizes as needed.
 	 * @param obj The object to parse
-	 * @return AddressType in normalized form
+	 * @return AddressType in normalised form
 	 * @throws IllegalArgumentException if the object cannot be parsed
 	 */
 	public abstract AddressType parseAddress(Object obj) throws IllegalArgumentException;
@@ -142,10 +153,24 @@ public abstract class AAdapter<AddressType extends ACell> {
 	 */
 	public abstract boolean verifyPersonalSignature(String message, String signature, String account);
 
+	/**
+	 * Get the alias for this adapter
+	 * @return
+	 */
 	public String getAlias() {
 		AMap<AString,ACell> config=getConfig();
 
 		return Utils.toString(config.get(Fields.ALIAS));
+	}
+	
+	/**
+	 * Get the alias for a token on this adapter
+	 * @param destToken Token identifier for this adapter (alias or CAIP-19 token ID)
+	 * @return Canonical token alias
+	 */
+	public AString getTokenAlias(String token) {
+		AString tokenKey=engine.getTokenKey(this, token);
+		return RT.getIn(tokens, tokenKey,Fields.ALIAS);
 	}
 	
 	public AString getDescription() {
@@ -239,6 +264,7 @@ public abstract class AAdapter<AddressType extends ACell> {
 		
 		// Add token mapping
 		tokens=tokens.assoc(assetID, trec);
+		tokenAliases=tokenAliases.assoc(tokenAlias, assetID);
 		
 		if (tokens==null) {
 			throw new Exception("Problem setting token mapping? "+assetID+" = "+trec);
@@ -290,12 +316,14 @@ public abstract class AAdapter<AddressType extends ACell> {
 	public abstract boolean validateSignature(String userKey, ABlob signature, ABlob message);
 
 	/**
-	 * Get the token index for this adapter
+	 * Get the token index for this adapter (CAIP Asset ID -> Config)
 	 * @return Token index
 	 */
 	public Index<AString,AMap<AString,ACell>> getTokens() {
 		return tokens;
 	}
+
+
 
 
 

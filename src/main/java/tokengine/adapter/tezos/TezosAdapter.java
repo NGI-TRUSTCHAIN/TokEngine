@@ -149,13 +149,13 @@ public class TezosAdapter extends AAdapter<AString> {
 	}
 
 	@Override
-	public AInteger getOperatorBalance(String asset) throws IOException {
+	public AInteger getOperatorBalance(AString asset) throws IOException {
 		AString operatorAddr = getOperatorAddress();
 		if (operatorAddr == null) {
 			log.warn("Cannot get operator balance - no operator address configured");
 			return CVMLong.ZERO;
 		}
-		return getBalance(asset, operatorAddr.toString());
+		return getBalance(asset.toString(), operatorAddr.toString());
 	}
 
 	/**

@@ -38,12 +38,12 @@
 		}
 	],
 	
-		/* Stste equivalent tokens on multilpe networks which can be transferred 1:1 */ 
+	/* USDC can be transferred 1:1 */ 
 	"transfers" : {
 		"USDC": {
 			"convex" : {
 				"symbol":"USDC",
-				"assetID":"cad29:test",
+				"assetID":"cad29:test", /* This deploys a test CAD29 token on launch */
 				"payout":true
 			},
 			"sepolia": {

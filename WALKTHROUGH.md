@@ -141,16 +141,16 @@ To payout USDC oin Convex, make a `POST` request to `api/v1/payout` like:
   "source": {
     "account": "0xa72018ba06475aCa284ED98AB0cE0E07878521a3",
     "network": "sepolia",
-    "token": "erc20:0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"
+    "token": "USDC"
   },
   "destination": {
     "account": "#12",
     "network": "convex",
-    "token": "cad29:132"
+    "token": "USDC"
   },
   "deposit": {
     "tx": "0x9d3a3663d32b9ff5cf2d393e433b7b31489d13b398133a35c4bb6e2085bd8e83",
-    "msg": "Transfer 100000 to #13 on convex",
+    "msg": "Transfer 100 USDC to #13 on convex",
     "sig": "0xdd48188b1647010d908e9fed4b6726cebd0d65e20f412b8b9ff4868386f05b0a28a9c0e35885c95e2322c2c670743edd07b0e1450ae65c3f6708b61bb3e582371c"
   },
   "quantity": "100"

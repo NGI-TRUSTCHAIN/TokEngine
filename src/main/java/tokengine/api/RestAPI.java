@@ -311,13 +311,15 @@ public class RestAPI extends ATokengineAPI {
 			AString r = doPayout(req);
 			// log.warn("Paying out on network: "+chainID +" token: "+token+" account: "+address + " quantity="+q);
 			prepareResult(ctx,Result.value(r));
+		} catch (PaymentException e) {
+			throw new BadRequestResponse("Payout payment failed: "+e.getMessage());
 		} finally {
 			Engine.endRequest();
 		}
 	}
 
 
-	private AString doPayout(AMap<AString, ACell> req) {
+	private AString doPayout(AMap<AString, ACell> req) throws PaymentException {
 		AMap<AString,ACell> src = RT.ensureMap(req.get(Fields.SOURCE));
 		if (src==null) throw new BadRequestResponse("Expected 'source' object specifying payor");
 		AString srcUserKey=RT.ensureString(src.get(Fields.ACCOUNT));
@@ -347,14 +349,19 @@ public class RestAPI extends ATokengineAPI {
 		AAdapter<?> destAdapter=engine.getAdapter(destChainID);
 		if (destAdapter==null) throw new BadRequestResponse("Can't find destination network: "+destChainID);
 
+		// Check tokens
+		String destToken=RT.str(dest.get(Fields.TOKEN)).toString();
+		String srcToken=RT.str(src.get(Fields.TOKEN)).toString();
+		if (destAdapter.getTokenAlias(destToken)!=adapter.getTokenAlias(srcToken) ) {
+			throw new BadRequestResponse("Tokens have different configured alias");
+		}
+		
 		// Subtract virtual credit
-		String token=RT.str(src.get(Fields.TOKEN)).toString();
-		AString tokenKey=engine.getTokenKey(adapter, token);
+		AString srcTokenKey=engine.getTokenKey(adapter, srcToken);
 		AString canonicalAddress=adapter.parseUserKey(srcUserKey.toString());
-		engine.subtractVirtualCredit(tokenKey, canonicalAddress, q);
+		engine.subtractVirtualCredit(srcTokenKey, canonicalAddress, q);
 		
 		// Payout on destination network
-		String destToken=RT.str(dest.get(Fields.TOKEN)).toString();
 		AString result = engine.makePayout(destUserKey.toString(), destToken, destAdapter, q,dep);
 		// log.warn("Payout made: "+r);
 		return result;

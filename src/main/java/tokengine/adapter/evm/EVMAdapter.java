@@ -147,8 +147,8 @@ public class EVMAdapter extends AAdapter<AString> {
 	
 
 	@Override
-	public AInteger getOperatorBalance(String asset) throws IOException {
-		return getBalance(asset,getOperatorAddress().toString());
+	public AInteger getOperatorBalance(AString asset) throws IOException {
+		return getBalance(asset.toString(),getOperatorAddress().toString());
 	}
 
 	private boolean isEth(String asset) {

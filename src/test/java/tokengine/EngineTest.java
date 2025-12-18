@@ -72,7 +72,7 @@ public class EngineTest {
 				assertNotNull(rec);
 				
 				try {
-					a.getOperatorBalance(toKey.toString());
+					a.getOperatorBalance(toKey);
 				} catch (IOException e) {
 					// might fail due to IO, if so ignore
 				}

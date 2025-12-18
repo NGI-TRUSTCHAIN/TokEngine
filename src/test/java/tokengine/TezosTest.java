@@ -458,7 +458,7 @@ public class TezosTest {
 		
 		// Test operator balance - should throw exception since we're not making real HTTP calls
 		assertThrows(Exception.class, () -> {
-			adapter.getOperatorBalance("XTZ");
+			adapter.getOperatorBalance(Strings.create("XTZ"));
 		});
 	}
 	

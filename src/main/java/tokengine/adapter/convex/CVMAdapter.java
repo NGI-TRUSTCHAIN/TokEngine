@@ -116,6 +116,22 @@ public class CVMAdapter extends AAdapter<Address> {
 	@Override
 	public AInteger getBalance(String caip19, String address) throws IOException {
 		Address addr=parseAddress(address);
+		
+		AString aliased=tokenAliases.get(Strings.create(caip19));
+		if (aliased!=null) {
+			caip19=aliased.toString();
+		}
+
+		// remove chain ID if present
+		String chainID=getChainIDString();
+		if (caip19.startsWith(chainID)) {
+			int n=chainID.length();
+			if (caip19.charAt(n)!='/') {
+				throw new IllegalArgumentException("Expected '/' after chain ID in "+caip19);
+			}
+			caip19=caip19.substring(n+1);
+		}
+
 		if ("CVM".equals(caip19)||CAIP.isCVM(caip19)) {
 			try {
 				Long l= convex.getBalance(parseAddress(address));
@@ -140,15 +156,31 @@ public class CVMAdapter extends AAdapter<Address> {
 	}
 	
 	@Override
-	public AInteger getOperatorBalance(String caip19) throws IOException {
+	public AInteger getOperatorBalance(AString caip19) throws IOException {
 		if (operatorAddress==null) throw new IllegalStateException("operator address does not exist");
-		return getBalance(caip19,operatorAddress.toString());
+		return getBalance(caip19.toString(),operatorAddress.toString());
 	}
 	
 	@Override
 	public AString payout(String caip19, AInteger quantity, String destAccount) throws Exception {
 		Address addr=parseAddress(destAccount);
 		Result r;
+		
+		AString aliased=tokenAliases.get(Strings.create(caip19));
+		if (aliased!=null) {
+			caip19=aliased.toString();
+		}
+		
+		// remove chain ID if present
+		String chainID=getChainIDString();
+		if (caip19.startsWith(chainID)) {
+			int n=chainID.length();
+			if (caip19.charAt(n)!='/') {
+				throw new IllegalArgumentException("Expected '/' after chain ID in "+caip19);
+			}
+			caip19=caip19.substring(n+1);
+		}
+		
 		if ("CVM".equals(caip19)||CAIP.isCVM(caip19)) {
 			if (!quantity.isLong()) {
 				throw new IllegalArgumentException("Invalid CVM quantity: "+quantity);
